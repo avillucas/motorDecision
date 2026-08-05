@@ -1,0 +1,20 @@
+@startuml
+package "BotFlow (Package/Core)" {
+  [ProcessIncomingMessageUseCase] as UseCase
+  [ConversationEngine] as Engine
+  interface SessionRepositoryInterface as ISession
+  interface MessageProviderInterface as IMessage
+  interface EventDispatcherInterface as IEvent
+}
+
+node "Infraestructura (Fuera de la Librería)" {
+  [Redis / Database] --> ISession : Implementa
+  [Google Sheets / JSON] --> IMessage : Implementa
+  [Event Listener / Webhook] --> IEvent : Escucha
+}
+
+UseCase --> Engine
+Engine --> ISession
+Engine --> IMessage
+Engine --> IEvent
+@enduml

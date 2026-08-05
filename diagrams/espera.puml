@@ -1,0 +1,46 @@
+@startuml Casos de uso 
+autonumber
+actor Adaptador
+participant ProcessIncomingMessageUseCase as UC
+participant SessionRepositoryInterface as SessionRepo
+participant MessageProviderInterface as MsgRepo
+participant EventDispatcherInterface as EventBus
+
+== Paso 1: Selección Opción C ==
+Adaptador -> UC : execute(userId, "C")
+UC -> SessionRepo : findByUserId(userId)
+SessionRepo --> UC : Session(state = 'MAIN_MENU')
+UC -> SessionRepo : save(Session(state = 'WAIT_C_NAME', payload = []))
+UC -> MsgRepo : get("prompt.ask_name")
+MsgRepo --> UC : "Escribe tu Nombre y Apellido:"
+UC --> Adaptador : "Escribe tu Nombre y Apellido:"
+
+== Paso 2: Ingreso de Nombre ==
+Adaptador -> UC : execute(userId, "Lucas Avila")
+UC -> SessionRepo : findByUserId(userId)
+SessionRepo --> UC : Session(state = 'WAIT_C_NAME')
+UC -> SessionRepo : save(Session(state = 'WAIT_C_CONTACT', payload = [name: 'Lucas Avila']))
+UC -> MsgRepo : get("prompt.ask_contact")
+MsgRepo --> UC : "Escribe tu número o email:"
+UC --> Adaptador : "Escribe tu número o email:"
+
+== Paso 3: Ingreso de Contacto ==
+Adaptador -> UC : execute(userId, "1123456789")
+UC -> SessionRepo : findByUserId(userId)
+SessionRepo --> UC : Session(state = 'WAIT_C_CONTACT')
+UC -> SessionRepo : save(Session(state = 'WAIT_C_COURSE', payload = [...]))
+UC -> MsgRepo : get("prompt.ask_course")
+MsgRepo --> UC : "Escribe el Curso de tu interés:"
+UC --> Adaptador : "Escribe el Curso de tu interés:"
+
+== Paso 4: Finalización y Disparo de Evento ==
+Adaptador -> UC : execute(userId, "Programación Web")
+UC -> SessionRepo : findByUserId(userId)
+SessionRepo --> UC : Session(state = 'WAIT_C_COURSE', payload = [...])
+
+UC -> EventBus : dispatch(LeadCompletedEvent('WAITLIST', payload))
+UC -> SessionRepo : save(Session(state = 'AWAITING_RESET', payload = []))
+UC -> MsgRepo : get("response.waitlist_confirmed")
+MsgRepo --> UC : "¡Registro confirmado!"
+UC --> Adaptador : "¡Registro confirmado!\n\nSi necesitas algo más..."
+@enduml

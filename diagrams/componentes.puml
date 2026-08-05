@@ -1,0 +1,20 @@
+@startuml Componentes
+package "BotFlow Core (TypeScript Package)" {
+  [ProcessIncomingMessageUseCase] as UseCase
+  [ConversationEngine] as Engine
+  interface SessionRepositoryInterface as ISession
+  interface MessageProviderInterface as IMessage
+  interface EventDispatcherInterface as IEvent
+}
+
+node "Infraestructura (Servicio Externe / App Principal)" {
+  [Redis / Database Adapter] --> ISession : Implementa
+  [Google Sheets / JSON Adapter] --> IMessage : Implementa
+  [Event Listener / Webhook Service] --> IEvent : Escucha
+}
+
+UseCase --> Engine
+Engine --> ISession
+Engine --> IMessage
+Engine --> IEvent
+@enduml

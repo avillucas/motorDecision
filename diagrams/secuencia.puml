@@ -1,0 +1,19 @@
+@startuml Diagrama de secuencia
+autonumber
+actor "Adaptador (Baileys)" as Adaptador
+participant ProcessIncomingMessageUseCase as UC
+participant SessionRepositoryInterface as SessionRepo
+participant MessageProviderInterface as MsgRepo
+
+Adaptador -> UC : execute({ userId: "123", text: "A" })
+UC -> SessionRepo : findByUserId("123")
+SessionRepo --> UC : Session (state = 'MAIN_MENU')
+
+UC -> MsgRepo : get("response.option_a")
+MsgRepo --> UC : "La oferta de cursos es..."
+UC -> MsgRepo : get("closing.text")
+MsgRepo --> UC : "Si necesitas consultar algo más..."
+
+UC -> SessionRepo : save(Session(state = 'AWAITING_RESET'))
+UC --> Adaptador : ResponsePayload { text: "La oferta de cursos es...\n\nSi necesitas..." }
+@enduml
