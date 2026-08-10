@@ -1,0 +1,19 @@
+{
+  "name": "motor-decision",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:bot-flow": "npm run build --workspace bot-flow",
+    "build:whatsapp-adapter": "npm run build --workspace whatsapp-adapter",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}

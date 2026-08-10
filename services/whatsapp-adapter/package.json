@@ -1,0 +1,20 @@
+{
+  "name": "whatsapp-adapter",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "start": "node dist/index.js",
+    "dev": "tsc -b --watch"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^5.0.0",
+    "ioredis": "^5.3.2",
+    "pino": "^8.14.0",
+    "bot-flow": "file:../../packages/bot-flow"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}

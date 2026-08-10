@@ -1,0 +1,23 @@
+{
+  "name": "bot-flow",
+  "version": "0.1.0",
+  "private": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepare": "tsc -b",
+    "test": "echo \"No tests configured yet for bot-flow\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}
