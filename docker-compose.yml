@@ -8,20 +8,14 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
-  whatsapp-adapter:
-    build:
-      context: .
-      dockerfile: services/whatsapp-adapter/Dockerfile
-    container_name: motor-decision-whatsapp-adapter
-    depends_on:
-      - redis
-    environment:
-      - REDIS_URL=redis://redis:6379
-      - WA_SESSION_PATH=/usr/src/app/session.json
-      - NODE_ENV=production
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
+
+  dev:
+    image: node:20-alpine
+    container_name: motor-decision-dev
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: tail -f /dev/null
 
 volumes:
   redis_data:

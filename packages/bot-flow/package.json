@@ -14,10 +14,12 @@
   "scripts": {
     "build": "tsc -b",
     "prepare": "tsc -b",
-    "test": "echo \"No tests configured yet for bot-flow\""
+    "test": "jest"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
     "typescript": "^5.5.2"
   }
 }

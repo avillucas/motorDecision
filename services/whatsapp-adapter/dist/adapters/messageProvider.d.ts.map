@@ -1,1 +1,0 @@
-{"version":3,"file":"messageProvider.d.ts","sourceRoot":"","sources":["../../src/adapters/messageProvider.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,wBAAwB,EAAE,MAAM,UAAU,CAAC;AAChE,OAAqB,EAAE,QAAQ,EAAE,MAAM,sBAAsB,CAAC;AAE9D,qBAAa,uBAAwB,YAAW,wBAAwB;IAC1D,OAAO,CAAC,QAAQ,CAAC,MAAM;gBAAN,MAAM,EAAE,QAAQ;IAEvC,IAAI,CAAC,OAAO,EAAE,UAAU,GAAG,OAAO,CAAC,IAAI,CAAC;CAG/C"}

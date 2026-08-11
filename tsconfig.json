@@ -19,9 +19,8 @@
       "bot-flow/*": ["packages/bot-flow/src/*"]
     }
   },
-  "include": ["packages/**/*", "services/**/*"],
+  "include": ["packages/**/*"],
   "references": [
-    { "path": "packages/bot-flow" },
-    { "path": "services/whatsapp-adapter" }
+    { "path": "packages/bot-flow" }
   ]
 }
