@@ -46,22 +46,23 @@ describe('DecisionEngine', () => {
 
   it('should transition to the next node based on exact match', () => {
     const engine = new DecisionEngine(nodes, 'start');
-    const nextNode = engine.processAnswer('technical');
-    expect(nextNode).toBeDefined();
+    const { nextNode } = engine.processAnswer('technical');
+    expect(nextNode).not.toBeNull();
     expect(nextNode?.id).toBe('tech_support');
     expect(engine.getCurrentNode().id).toBe('tech_support');
   });
 
   it('should handle catch-all option', () => {
     const engine = new DecisionEngine(nodes, 'billing_support');
-    const nextNode = engine.processAnswer('INV-12345');
+    const { nextNode } = engine.processAnswer('INV-12345');
     expect(nextNode?.id).toBe('billing_escalate');
   });
 
   it('should return null or throw if invalid answer and no catch-all', () => {
     const engine = new DecisionEngine(nodes, 'start');
-    const nextNode = engine.processAnswer('sales');
+    const { nextNode, error } = engine.processAnswer('sales');
     expect(nextNode).toBeNull(); // or handle differently, maybe stay on current
+    expect(error).toBeDefined();
     expect(engine.getCurrentNode().id).toBe('start'); // state should not change
   });
 });

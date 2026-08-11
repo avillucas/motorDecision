@@ -10,6 +10,15 @@ export interface DecisionNode {
   extractData?: string; // Nombre del campo a extraer de la respuesta del usuario (opcional)
 }
 
+export interface TransitionResult {
+  nextNode: DecisionNode | null;
+  extractedData?: {
+    key: string;
+    value: string;
+  };
+  error?: string;
+}
+
 export class DecisionEngine {
   private currentNodeId: string;
   private nodesMap: Map<string, DecisionNode>;
@@ -30,20 +39,32 @@ export class DecisionEngine {
     return node;
   }
 
-  processAnswer(answer: string): DecisionNode | null {
+  processAnswer(answer: string): TransitionResult {
     const currentNode = this.getCurrentNode();
     
     for (const option of currentNode.options) {
       if (option.match === '*' || option.match.toLowerCase() === answer.toLowerCase()) {
         const nextNode = this.nodesMap.get(option.nextId);
         if (nextNode) {
+          const result: TransitionResult = { nextNode };
+          
+          if (currentNode.extractData) {
+            result.extractedData = {
+              key: currentNode.extractData,
+              value: answer
+            };
+          }
+
           this.currentNodeId = nextNode.id;
-          return nextNode;
+          return result;
         }
       }
     }
     
     // No match found
-    return null;
+    return {
+      nextNode: null,
+      error: `Invalid answer for node '${currentNode.id}'`
+    };
   }
 }

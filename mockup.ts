@@ -1,67 +1,52 @@
-import { DecisionEngine, DecisionNode } from "./src/domain/DecisionEngine";
+import * as readline from 'readline';
+import { DecisionEngine } from "./src/domain/DecisionEngine";
+import { cfp412Mockup } from "./src/data/cfp412Mockup";
 
-const mockupData: DecisionNode[] = [
-  {
-    id: "start",
-    text: "Hola! Soy tu asistente virtual. ¿Sobre qué necesitas información?\n1) Horarios\n2) Ubicación",
-    options: [
-      { match: "1", nextId: "horarios" },
-      { match: "2", nextId: "ubicacion" },
-      { match: "*", nextId: "invalido" }
-    ]
-  },
-  {
-    id: "horarios",
-    text: "Nuestros horarios de atención son de Lunes a Viernes de 9:00 AM a 6:00 PM.",
-    options: [
-      { match: "*", nextId: "start" }
-    ]
-  },
-  {
-    id: "ubicacion",
-    text: "Nos encontramos en la Avenida Principal 1234, Ciudad Central.",
-    options: [
-      { match: "*", nextId: "start" }
-    ]
-  },
-  {
-    id: "invalido",
-    text: "Disculpa, no entendí tu respuesta. Por favor responde con '1' o '2'.",
-    options: [
-      { match: "1", nextId: "horarios" },
-      { match: "2", nextId: "ubicacion" },
-      { match: "*", nextId: "invalido" }
-    ]
-  }
-];
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-// Inicializar la carga de los mensajes en relación a los contenidos
-const engine = new DecisionEngine(mockupData, "start");
+const engine = new DecisionEngine(cfp412Mockup, "MSG_INICIAL");
 
-console.log("=== INICIO DE LA SIMULACIÓN ===\n");
+console.log("\n=============================================");
+console.log("=== SIMULADOR DE CHATBOT - CFP 412       ===");
+console.log("=============================================\n");
+console.log("Escribe 'salir' en cualquier momento para terminar.\n");
 
 function printBot(text: string) {
-  console.log(`🤖 Bot: ${text}`);
+  console.log(`\n🤖 Bot:\n${text}\n`);
 }
 
-function sendUserReply(reply: string) {
-  console.log(`👤 Usuario: ${reply}`);
-  const nextNode = engine.processAnswer(reply);
-  if (nextNode) {
-    printBot(nextNode.text);
-  }
+function promptUser() {
+  rl.question('👤 Tú: ', (answer) => {
+    if (answer.toLowerCase().trim() === 'salir') {
+      console.log("\n¡Hasta luego! 👋\n");
+      rl.close();
+      return;
+    }
+
+    const nextNode = engine.processAnswer(answer.trim());
+    if (nextNode) {
+      if (nextNode.extractData) {
+        console.log(`\n[Sistema: Dato extraído esperado en este paso -> '${nextNode.extractData}']`);
+      }
+      printBot(nextNode.text);
+    } else {
+      console.log(`\n[Sistema: No se encontró una ruta válida para '${answer}']`);
+      // Vuelve a mostrar el mensaje actual para que intente de nuevo
+      printBot(engine.getCurrentNode().text);
+    }
+
+    promptUser();
+  });
 }
 
-// 1. Muestra el mensaje inicial
-printBot(engine.getCurrentNode().text);
+// Inicia la conversación mostrando el primer mensaje
+const currentNode = engine.getCurrentNode();
+if (currentNode.extractData) {
+  console.log(`[Sistema: Dato extraído esperado en este paso -> '${currentNode.extractData}']`);
+}
+printBot(currentNode.text);
 
-// 2. El usuario envía algo inválido
-sendUserReply("Quiero hablar con un humano");
-
-// 3. El usuario elige la opción 1 (Horarios)
-sendUserReply("1");
-
-// 4. El usuario envía cualquier cosa para volver al inicio
-sendUserReply("Gracias");
-
-console.log("\n=== FIN DE LA SIMULACIÓN ===");
+promptUser();
