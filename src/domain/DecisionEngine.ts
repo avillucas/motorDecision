@@ -7,6 +7,7 @@ export interface DecisionNode {
   id: string;
   text: string;
   options: DecisionOption[];
+  extractData?: string; // Nombre del campo a extraer de la respuesta del usuario (opcional)
 }
 
 export class DecisionEngine {
