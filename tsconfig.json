@@ -8,19 +8,9 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
-    "composite": true,
     "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "bot-flow": ["packages/bot-flow/src"],
-      "bot-flow/*": ["packages/bot-flow/src/*"]
-    }
+    "rootDir": "src"
   },
-  "include": ["packages/**/*"],
-  "references": [
-    { "path": "packages/bot-flow" }
-  ]
+  "include": ["src/**/*"]
 }

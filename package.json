@@ -2,16 +2,18 @@
   "name": "motor-decision",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build --workspaces",
-    "build:bot-flow": "npm run build --workspace bot-flow",
-    "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down"
+    "build": "tsc",
+    "test": "jest",
+    "start": "ts-node mockup.ts"
   },
   "devDependencies": {
-    "typescript": "^5.5.2"
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.19.43",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
