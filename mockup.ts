@@ -26,14 +26,19 @@ function promptUser() {
       return;
     }
 
-    const nextNode = engine.processAnswer(answer.trim());
+    const { nextNode, extractedData, error } = engine.processAnswer(answer.trim());
+    
     if (nextNode) {
+      if (extractedData) {
+        console.log(`\n✅ [Sistema: Dato extraído: { clave: '${extractedData.key}', valor: '${extractedData.value}' }]`);
+      }
+      
       if (nextNode.extractData) {
-        console.log(`\n[Sistema: Dato extraído esperado en este paso -> '${nextNode.extractData}']`);
+        console.log(`\n[Sistema: Dato extraído esperado en el próximo paso -> '${nextNode.extractData}']`);
       }
       printBot(nextNode.text);
     } else {
-      console.log(`\n[Sistema: No se encontró una ruta válida para '${answer}']`);
+      console.log(`\n❌ [Sistema: Error - ${error}]`);
       // Vuelve a mostrar el mensaje actual para que intente de nuevo
       printBot(engine.getCurrentNode().text);
     }
@@ -45,7 +50,7 @@ function promptUser() {
 // Inicia la conversación mostrando el primer mensaje
 const currentNode = engine.getCurrentNode();
 if (currentNode.extractData) {
-  console.log(`[Sistema: Dato extraído esperado en este paso -> '${currentNode.extractData}']`);
+  console.log(`[Sistema: Dato extraído esperado en el próximo paso -> '${currentNode.extractData}']`);
 }
 printBot(currentNode.text);
 
