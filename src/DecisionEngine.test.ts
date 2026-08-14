@@ -96,4 +96,21 @@ describe('DecisionEngine', () => {
     });
     expect(result.nextNode?.id).toBe('tech_restart');
   });
+
+  it('should ignore matching option if nextId does not exist and fallback to error', () => {
+    const brokenNodes = [
+      {
+        id: 'start',
+        text: 'Hello',
+        options: [
+          { match: 'yes', nextId: 'missing_node' }
+        ]
+      }
+    ];
+    const engine = new DecisionEngine(brokenNodes, 'start');
+    const { nextNode, error } = engine.processAnswer('yes');
+    expect(nextNode).toBeNull();
+    expect(error).toBeDefined();
+    expect(engine.getCurrentNode().id).toBe('start');
+  });
 });
