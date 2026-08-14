@@ -1,8 +1,8 @@
 import * as readline from 'readline';
 import { DecisionEngine } from "../domain/DecisionEngine";
-import { cfp412Mockup } from "../data/cfp412Mockup";
-import { CsvLeadRepository } from "../data/CsvLeadRepository";
 import { SessionLeadManager } from "../application/SessionLeadManager";
+import { FlowProvider } from "../domain/FlowProvider";
+import { LeadRepository } from "../domain/LeadRepository";
 
 export class ConsoleAdapter {
   private engine: DecisionEngine;
@@ -10,9 +10,8 @@ export class ConsoleAdapter {
   private sessionId: string;
   private rl: readline.Interface;
 
-  constructor() {
-    this.engine = new DecisionEngine(cfp412Mockup, "MSG_INICIAL");
-    const leadRepo = new CsvLeadRepository();
+  constructor(flowProvider: FlowProvider, leadRepo: LeadRepository) {
+    this.engine = new DecisionEngine(flowProvider.getFlow(), flowProvider.getInitialNodeId());
     this.leadManager = new SessionLeadManager(leadRepo);
     
     // Generamos un ID de sesión simulado único por cada ejecución del comando

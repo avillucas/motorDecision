@@ -6,8 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "start": "ts-node src/index.ts",
-    "start:mockup": "ts-node mockup.ts"
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.5",

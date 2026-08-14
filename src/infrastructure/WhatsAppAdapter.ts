@@ -4,9 +4,9 @@ import pino from 'pino';
 import { Boom } from '@hapi/boom';
 import { DecisionEngine } from '../domain/DecisionEngine';
 import { SessionLeadManager } from '../application/SessionLeadManager';
-import { cfp412Mockup } from '../data/cfp412Mockup';
-import { CsvLeadRepository } from '../data/CsvLeadRepository';
 import { SessionIdGenerator } from '../utils/SessionIdGenerator';
+import { FlowProvider } from '../domain/FlowProvider';
+import { LeadRepository } from '../domain/LeadRepository';
 
 // Interfaz para mantener el estado de la conversación activa por usuario
 interface ActiveSession {
@@ -17,10 +17,11 @@ interface ActiveSession {
 export class WhatsAppAdapter {
   private activeSessions = new Map<string, ActiveSession>(); // remoteJid -> Session
   private leadManager: SessionLeadManager;
+  private flowProvider: FlowProvider;
 
-  constructor() {
-    const leadRepo = new CsvLeadRepository();
+  constructor(flowProvider: FlowProvider, leadRepo: LeadRepository) {
     this.leadManager = new SessionLeadManager(leadRepo);
+    this.flowProvider = flowProvider;
   }
 
   async start() {
@@ -82,7 +83,7 @@ export class WhatsAppAdapter {
       
       this.activeSessions.set(remoteJid, {
         sessionId: sessionId,
-        engine: new DecisionEngine(cfp412Mockup, "MSG_INICIAL")
+        engine: new DecisionEngine(this.flowProvider.getFlow(), this.flowProvider.getInitialNodeId())
       });
 
       // Enviar el mensaje inicial sin necesidad de que el usuario haya acertado una opción
