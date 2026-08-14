@@ -5,4 +5,8 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
+      # Persistencia explícita de los CSVs de Leads en el host
+      - ./leads_data:/usr/src/app/leads_data
+      # Persistencia de los datos de la sesión de charla (auth) de WhatsApp
+      - ./auth_info_baileys:/usr/src/app/auth_info_baileys
     command: tail -f /dev/null
