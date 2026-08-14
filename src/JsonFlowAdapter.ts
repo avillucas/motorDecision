@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { FlowProvider } from '../domain/FlowProvider';
-import { DecisionNode } from '../domain/DecisionEngine';
+import { FlowProvider } from './FlowProvider';
+import { DecisionNode } from './DecisionEngine';
 
 export class JsonFlowAdapter implements FlowProvider {
   private flow: DecisionNode[];

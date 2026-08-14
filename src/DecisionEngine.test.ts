@@ -65,4 +65,35 @@ describe('DecisionEngine', () => {
     expect(error).toBeDefined();
     expect(engine.getCurrentNode().id).toBe('start'); // state should not change
   });
+
+  it('should throw an error if initial state is not found', () => {
+    expect(() => new DecisionEngine(nodes, 'invalid_start')).toThrow("Initial state node 'invalid_start' not found.");
+  });
+
+  it('should throw an error if current node is unexpectedly missing', () => {
+    const engine = new DecisionEngine(nodes, 'start');
+    // Force corrupted state for test
+    (engine as any).currentNodeId = 'corrupted_state';
+    expect(() => engine.getCurrentNode()).toThrow("Current node 'corrupted_state' not found in configuration.");
+  });
+
+  it('should extract data if extractData is defined on the node', () => {
+    const nodeWithExtract = {
+      id: 'ask_name',
+      text: 'What is your name?',
+      extractData: 'userName',
+      options: [
+        { match: '*', nextId: 'tech_restart' }
+      ]
+    };
+    const newNodes = [...nodes, nodeWithExtract];
+    const engine = new DecisionEngine(newNodes, 'ask_name');
+    
+    const result = engine.processAnswer('Lucas');
+    expect(result.extractedData).toEqual({
+      key: 'userName',
+      value: 'Lucas'
+    });
+    expect(result.nextNode?.id).toBe('tech_restart');
+  });
 });
